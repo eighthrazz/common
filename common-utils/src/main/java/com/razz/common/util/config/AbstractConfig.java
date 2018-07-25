@@ -1,4 +1,4 @@
-package com.razz.common.util;
+package com.razz.common.util.config;
 
 import java.util.HashMap;
 import java.util.Map;
