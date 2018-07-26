@@ -1,6 +1,5 @@
 package com.razz.common.util.ftp;
 
-
 import java.util.Properties;
 
 import com.razz.common.util.config.AbstractConfig;

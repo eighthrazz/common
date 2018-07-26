@@ -38,6 +38,10 @@ public abstract class AbstractConfig<K> {
 		return map.get(key).toString();
 	}
 	
+	public char[] getCharArray(K key) {
+		return getString(key).toCharArray();
+	}
+	
 	public int getInt(K key) {
 		return Integer.parseInt( getString(key) );
 	}

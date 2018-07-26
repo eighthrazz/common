@@ -1,16 +1,18 @@
-package com.razz.common.util.ftp;
+package com.razz.common.nosql;
 
 import java.util.Map;
 
-public enum FtpConfigKey {
-	HOST("ftp.host"), 
-	PORT("ftp.port"), 
-	USER("ftp.user"), 
-	PASSWORD("ftp.password");
+public enum NoSqlConfigKey {
 
+	USER("nosql.user"),
+	PASSWORD("nosql.password"),
+	HOST("nosql.host"), 
+	PORT("nosql.port"),
+	DATABASE("nosql.database");
+	
 	private final String key;
 
-	private FtpConfigKey(String key) {
+	private NoSqlConfigKey(String key) {
 		this.key = key;
 	}
 
@@ -27,12 +29,13 @@ public enum FtpConfigKey {
 		return key;
 	}
 	
-	public static FtpConfigKey parse(String keyStr) {
-		for(FtpConfigKey k : FtpConfigKey.values()) {
+	public static NoSqlConfigKey parse(String keyStr) {
+		for(NoSqlConfigKey k : NoSqlConfigKey.values()) {
 			if(k.key.equalsIgnoreCase(keyStr)) {
 				return k;
 			}
 		}
 		return null;
 	}
+	
 }

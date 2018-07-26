@@ -28,9 +28,9 @@ public class Ftp {
 		close();
 		
 		// connect
-		final String ip = config.getString(FtpConfigKey.IP);
+		final String host = config.getString(FtpConfigKey.HOST);
 		final int port = config.getInt(FtpConfigKey.PORT);
-		ftpClient.connect(ip, port);
+		ftpClient.connect(host, port);
 		
 		// login
 		final String user = config.getString(FtpConfigKey.USER);
