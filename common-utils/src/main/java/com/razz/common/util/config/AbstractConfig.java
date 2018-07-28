@@ -28,6 +28,10 @@ public abstract class AbstractConfig<K> {
 		}
 	}
 	
+	public void load(AbstractConfig<K> config) {
+		map.putAll(config.map);
+	}
+	
 	public abstract K getKey(String key);
 	
 	public void set(K key, Object value) {

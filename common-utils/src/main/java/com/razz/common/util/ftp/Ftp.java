@@ -1,7 +1,10 @@
 package com.razz.common.util.ftp;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.NotDirectoryException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -10,6 +13,8 @@ import java.util.List;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
+
+import com.razz.common.helper.FileHelper;
 
 public class Ftp {
 
@@ -59,6 +64,29 @@ public class Ftp {
 			fileList.add(file);
 		}
 		return fileList;
+	}
+	
+	public File copy(File remoteFile) throws IOException {
+		final File tmpDir = FileHelper.getTmpDir();
+		final File localFile = copy(remoteFile, tmpDir);
+		localFile.deleteOnExit();
+		return localFile;
+	}
+	
+	public File copy(File remoteFile, File localDir) throws IOException {
+		// verify localDir is a directory
+		if( !localDir.isDirectory() ) {
+			final String message = String.format("localDir must be a directory, localDir=%s", localDir);
+			throw new NotDirectoryException(message);
+		}
+			
+		// retrieve and write to localDir
+		final String remote = ftpPath( remoteFile.getPath() );
+		final File localFile = Paths.get(localDir.toString(), remoteFile.getName()).toFile();
+		try(OutputStream localFileOut = new FileOutputStream(localFile)) {
+			ftpClient.retrieveFile(remote, localFileOut);
+		}
+		return localFile;
 	}
 	
 	public static File toFile(FTPFile ftpFile, String rootPath) {

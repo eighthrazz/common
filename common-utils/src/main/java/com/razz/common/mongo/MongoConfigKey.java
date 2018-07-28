@@ -1,8 +1,8 @@
-package com.razz.common.nosql;
+package com.razz.common.mongo;
 
 import java.util.Map;
 
-public enum NoSqlConfigKey {
+public enum MongoConfigKey {
 
 	USER("nosql.user"),
 	PASSWORD("nosql.password"),
@@ -12,7 +12,7 @@ public enum NoSqlConfigKey {
 	
 	private final String key;
 
-	private NoSqlConfigKey(String key) {
+	private MongoConfigKey(String key) {
 		this.key = key;
 	}
 
@@ -29,8 +29,8 @@ public enum NoSqlConfigKey {
 		return key;
 	}
 	
-	public static NoSqlConfigKey parse(String keyStr) {
-		for(NoSqlConfigKey k : NoSqlConfigKey.values()) {
+	public static MongoConfigKey parse(String keyStr) {
+		for(MongoConfigKey k : MongoConfigKey.values()) {
 			if(k.key.equalsIgnoreCase(keyStr)) {
 				return k;
 			}
