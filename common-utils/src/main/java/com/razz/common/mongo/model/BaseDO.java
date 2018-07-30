@@ -5,7 +5,7 @@ import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.annotations.Version;
 
-public class BaseMongoDO {
+public class BaseDO {
 
 	@Id
 	@Property("id")
@@ -15,7 +15,7 @@ public class BaseMongoDO {
 	@Property("version")
 	private Long version;
 
-	public BaseMongoDO() {
+	public BaseDO() {
 		super();
 	}
 

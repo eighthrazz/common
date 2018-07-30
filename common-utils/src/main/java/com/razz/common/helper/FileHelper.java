@@ -1,6 +1,7 @@
 package com.razz.common.helper;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.UUID;
 
@@ -46,6 +47,15 @@ public class FileHelper {
 	
 	public static File getTmpDir() {
 		return Paths.get( System.getProperty("java.io.tmpdir") ).toFile();
+	}
+	
+	public static File getTmpFile() throws IOException {
+		final String prefix = "temp";
+		final String suffix = "tmp";
+		final File directory = getTmpDir();
+		final File tmpFile = File.createTempFile(prefix, suffix, directory);
+		tmpFile.deleteOnExit();
+		return tmpFile;
 	}
 	
 }

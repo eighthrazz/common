@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 
@@ -41,6 +42,9 @@ public class Ftp {
 		final String user = config.getString(FtpConfigKey.USER);
 		final String password = config.getString(FtpConfigKey.PASSWORD);
 		ftpClient.login(user, password);
+		
+		// set file type
+		ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 	}
 	
 	public void close() {
@@ -67,9 +71,16 @@ public class Ftp {
 	}
 	
 	public File copy(File remoteFile) throws IOException {
+		final boolean deleteOnExit = true;
+		return copy(remoteFile, deleteOnExit);
+	}
+	
+	public File copy(File remoteFile, boolean deleteOnExit) throws IOException {
 		final File tmpDir = FileHelper.getTmpDir();
 		final File localFile = copy(remoteFile, tmpDir);
-		localFile.deleteOnExit();
+		if(deleteOnExit) {
+			localFile.deleteOnExit();
+		}
 		return localFile;
 	}
 	

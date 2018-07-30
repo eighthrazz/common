@@ -1,6 +1,10 @@
 package com.razz.common.mongo.model;
 
-public class VideoDO extends BaseMongoDO {
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Property;
+
+@Entity("video")
+public class VideoDO extends BaseDO {
 	
 	public static enum Status {
 		unknown, 
@@ -16,12 +20,19 @@ public class VideoDO extends BaseMongoDO {
 		}
 	}
 	
+	@Property("path")
 	private String path;
+	@Property("status")
 	private String status;
 	
 	public VideoDO() {
-		setPath(null);
-		setStatus(null);
+		setPath("");
+		setStatusEnum(Status.unknown);
+	}
+	
+	public VideoDO(String path) {
+		this();
+		setPath(path);
 	}
 	
 	public String getPath() {
@@ -38,6 +49,14 @@ public class VideoDO extends BaseMongoDO {
 	
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	
+	public Status getStatusEnum() {
+		return Status.parse(status.toString());
+	}
+	
+	public void setStatusEnum(Status status) {
+		setStatus(status.toString());
 	}
 
 	@Override
