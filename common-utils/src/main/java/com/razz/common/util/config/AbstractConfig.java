@@ -39,7 +39,7 @@ public abstract class AbstractConfig<K> {
 	}
 	
 	public String getString(K key) {
-		return map.get(key).toString();
+		return map.get(key).toString().trim();
 	}
 	
 	public char[] getCharArray(K key) {

@@ -2,6 +2,7 @@ package com.razz.common.util.media;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
@@ -10,6 +11,7 @@ import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.Java2DFrameConverter;
 
+import com.razz.common.helper.FileHelper;
 import com.xuggle.mediatool.IMediaReader;
 import com.xuggle.mediatool.IMediaWriter;
 import com.xuggle.mediatool.MediaToolAdapter;
@@ -20,6 +22,8 @@ import com.xuggle.mediatool.event.IVideoPictureEvent;
 
 public class VideoUtils {
 
+	public static final String MP4_EXTENSION = "mp4";
+	
 	public static BufferedImage mp4ToImage(File mp4File, long timestamp, TimeUnit timeUnit) throws Exception {
 		try( final FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(mp4File) ) {
 			grabber.start();
@@ -55,6 +59,12 @@ public class VideoUtils {
 	public static void trim(File mp4SrcFile, File mp4DstFile, long begin, long end, TimeUnit timeUnit, 
 			boolean includeAudio, boolean includeVideo) throws Exception 
 	{
+		// make sure destination file is mp4
+		if( !FileHelper.isExtension(mp4DstFile, MP4_EXTENSION) ) {
+			final String error = String.format("Destination file must have an extension of %s.", MP4_EXTENSION);
+			throw new IOException(error);
+		}
+		
 		// remove destination file 
 		if(mp4DstFile.exists()) {
 			mp4DstFile.delete();
