@@ -12,6 +12,11 @@ public abstract class AbstractConfig<K> {
 		map = new HashMap<>();
 	}
 	
+	public AbstractConfig(AbstractConfig<K> config) {
+		this();
+		load(config);
+	}
+	
 	public AbstractConfig(Properties properties) {
 		this();
 		load(properties);

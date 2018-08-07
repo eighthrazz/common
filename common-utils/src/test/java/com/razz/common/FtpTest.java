@@ -20,8 +20,7 @@ public class FtpTest {
 		final Properties props = ConfigManager.get();
 		final Path ftpPath = Paths.get(props.getProperty("ftp.path"));
 		final FtpConfig ftpConfig = new FtpConfig(props);
-		final Ftp ftp = new Ftp();
-		ftp.connect(ftpConfig);
+		final Ftp ftp = new Ftp(ftpConfig);
 		final List<File> fileList = ftp.getFileList(ftpPath);
 		System.out.println(fileList);
     }

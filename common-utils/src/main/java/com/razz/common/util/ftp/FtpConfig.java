@@ -10,6 +10,10 @@ public class FtpConfig extends AbstractConfig<FtpConfigKey> {
 		super();
 	}
 	
+	public FtpConfig(FtpConfig config) {
+		super(config);
+	}
+	
 	public FtpConfig(Properties properties) {
 		super(properties);
 	}
