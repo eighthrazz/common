@@ -10,6 +10,10 @@ public class MongoConfig extends AbstractConfig<MongoConfigKey> {
 		super();
 	}
 	
+	public MongoConfig(MongoConfig config) {
+		super(config);
+	}
+	
 	public MongoConfig(Properties properties) {
 		super(properties);
 	}

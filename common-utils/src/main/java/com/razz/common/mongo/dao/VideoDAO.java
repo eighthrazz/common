@@ -22,12 +22,18 @@ public class VideoDAO extends BaseDAO<VideoDO> {
 	public void update(VideoDO video) {
 		final UpdateOperations<VideoDO> updateOperation = 
 				datastore.createUpdateOperations(VideoDO.class)
-				.set("status", video.getStatus());
+				.set("active", video.isActive());
 		datastore.update(getKeyQuery(video), updateOperation);
 	}
 	
 	@Override
 	public Query<VideoDO> getKeyQuery(VideoDO video) {
-		return datastore.find(VideoDO.class).filter("path ==", video.getPath());
+		return datastore.find( getType() ).filter("path ==", video.getPath());
 	}
+
+	@Override
+	public Class<VideoDO> getType() {
+		return VideoDO.class;
+	}
+	
 }

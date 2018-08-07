@@ -1,5 +1,7 @@
 package com.razz.common.mongo;
 
+import java.io.Closeable;
+
 import org.bson.Document;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
@@ -11,7 +13,7 @@ import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
-public class Mongo {
+public class Mongo implements Closeable {
 
 	private final MongoConfig mongoConfig;
 	private MongoClient mongoClient;
@@ -19,19 +21,16 @@ public class Mongo {
 	private Morphia morphia;
 	private Datastore datastore;
 	
-	public Mongo() {
-		this.mongoConfig = new MongoConfig();
+	public Mongo(MongoConfig config) {
+		this.mongoConfig = new MongoConfig(config);
 		
 		// reset global variables
 		close();
 	}
 	
-	public void connect(MongoConfig config) throws Exception {
+	public void connect() throws Exception {
 		// disconnect, ignore errors
 		close();
-		
-		// set the global configuration
-		mongoConfig.load(config);
 		
 		// build ServerAddress
 		final String host = mongoConfig.getString(MongoConfigKey.HOST);
@@ -59,6 +58,7 @@ public class Mongo {
 		datastore = morphia.createDatastore(mongoClient, database);
 	}
 	
+	@Override
 	public void close() {
 		if(mongoClient != null) {
 			try {
@@ -71,12 +71,62 @@ public class Mongo {
 		datastore = null;
 	}
 	
-	public MongoCollection<Document> getCollection(String name) {
-		return mongoDatabase.getCollection(name);
+	/**
+	 * getMongoClient.
+	 * @return MongoClient
+	 * @throws Exception
+	 */
+	public MongoClient getMongoClient() throws Exception {
+		if(mongoClient == null) {
+			connect();
+		}
+		return mongoClient;
 	}
 	
-	public Datastore getDatastore() {
+	/**
+	 * getMongoDatabase.
+	 * @return MongoDatabase
+	 * @throws Exception
+	 */
+	public MongoDatabase getMongoDatabase() throws Exception {
+		if(mongoDatabase == null) {
+			connect();
+		}
+		return mongoDatabase;
+	}
+	
+	/**
+	 * getMorphia.
+	 * @return Morphia
+	 * @throws Exception
+	 */
+	public Morphia getMorphia() throws Exception {
+		if(morphia == null) {
+			connect();
+		}
+		return morphia;
+	}
+	
+	/**
+	 * getDatastore.
+	 * @return Datastore
+	 * @throws Exception
+	 */
+	public Datastore getDatastore() throws Exception {
+		if(datastore == null) {
+			connect();
+		}
 		return datastore;
+	}
+	
+	/**
+	 * getCollection.
+	 * @param name
+	 * @return MongoCollection<Document>
+	 * @throws Exception 
+	 */
+	public MongoCollection<Document> getCollection(String name) throws Exception {
+		return getMongoDatabase().getCollection(name);
 	}
 	
 }

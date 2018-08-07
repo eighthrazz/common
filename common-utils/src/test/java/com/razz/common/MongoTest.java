@@ -1,6 +1,5 @@
 package com.razz.common;
 
-import java.util.List;
 import java.util.Properties;
 
 import org.mongodb.morphia.Datastore;
@@ -16,9 +15,9 @@ public class MongoTest {
 	public static void main(String args[]) {
 		final Properties props = ConfigManager.get();
 		final MongoConfig config = new MongoConfig(props);
-		final Mongo noSql = new Mongo();
+		final Mongo noSql = new Mongo(config);
 		try {
-			noSql.connect(config);
+			noSql.connect();
 			
 			final String path = "/1/2/3/4.txt";
 			final VideoDO video = new VideoDO(path);

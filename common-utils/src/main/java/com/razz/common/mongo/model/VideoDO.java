@@ -6,28 +6,14 @@ import org.mongodb.morphia.annotations.Property;
 @Entity("video")
 public class VideoDO extends BaseDO {
 	
-	public static enum Status {
-		unknown, 
-		downloading;
-		
-		public static Status parse(String str) {
-			for(Status s : Status.values()) {
-				if(s.name().equalsIgnoreCase(str.trim())) {
-					return s;
-				}
-			}
-			return null;
-		}
-	}
-	
 	@Property("path")
 	private String path;
-	@Property("status")
-	private String status;
+	@Property("active")
+	private boolean active;
 	
 	public VideoDO() {
 		setPath("");
-		setStatusEnum(Status.unknown);
+		setActive(true);
 	}
 	
 	public VideoDO(String path) {
@@ -42,29 +28,21 @@ public class VideoDO extends BaseDO {
 	public void setPath(String path) {
 		this.path = path;
 	}
-	
-	public String getStatus() {
-		return status;
+
+	public boolean isActive() {
+		return active;
 	}
-	
-	public void setStatus(String status) {
-		this.status = status;
-	}
-	
-	public Status getStatusEnum() {
-		return Status.parse(status.toString());
-	}
-	
-	public void setStatusEnum(Status status) {
-		setStatus(status.toString());
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + (active ? 1231 : 1237);
 		result = prime * result + ((path == null) ? 0 : path.hashCode());
-		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		return result;
 	}
 
@@ -77,23 +55,19 @@ public class VideoDO extends BaseDO {
 		if (getClass() != obj.getClass())
 			return false;
 		VideoDO other = (VideoDO) obj;
+		if (active != other.active)
+			return false;
 		if (path == null) {
 			if (other.path != null)
 				return false;
 		} else if (!path.equals(other.path))
-			return false;
-		if (status == null) {
-			if (other.status != null)
-				return false;
-		} else if (!status.equals(other.status))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "VideoDO [path=" + path + ", status=" + status + "]";
+		return "VideoDO [path=" + path + ", active=" + active + "]";
 	}
-	
 
 }
