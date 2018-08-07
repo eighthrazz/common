@@ -27,7 +27,7 @@ public class VideoUtilsTest {
 		final TimeUnit timeUnit = TimeUnit.MILLISECONDS;
 		final boolean includeAudio = false;
 		final boolean includeVideo = true;
-		VideoUtils.trim(mp4SrcFile, mp4DstFile, start, end, timeUnit, includeAudio, includeVideo);
+		VideoUtils.trim(mp4SrcFile, mp4DstFile, start, end, timeUnit);//, includeAudio, includeVideo);
 		assertTrue(mp4DstFile.exists());
 		assertTrue(mp4DstFile.length() > 0);
 	}

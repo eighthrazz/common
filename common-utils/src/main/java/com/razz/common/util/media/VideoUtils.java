@@ -2,23 +2,16 @@ package com.razz.common.util.media;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
 
 import org.bytedeco.javacv.FFmpegFrameGrabber;
+import org.bytedeco.javacv.FFmpegFrameRecorder;
 import org.bytedeco.javacv.Frame;
+import org.bytedeco.javacv.FrameGrabber;
+import org.bytedeco.javacv.FrameRecorder;
 import org.bytedeco.javacv.Java2DFrameConverter;
-
-import com.razz.common.helper.FileHelper;
-import com.xuggle.mediatool.IMediaReader;
-import com.xuggle.mediatool.IMediaWriter;
-import com.xuggle.mediatool.MediaToolAdapter;
-import com.xuggle.mediatool.ToolFactory;
-import com.xuggle.mediatool.event.IAudioSamplesEvent;
-import com.xuggle.mediatool.event.IRawMediaEvent;
-import com.xuggle.mediatool.event.IVideoPictureEvent;
 
 public class VideoUtils {
 
@@ -52,72 +45,38 @@ public class VideoUtils {
 		ImageIO.write(buffImg, "jpg", destJpg);
 	}
 	
-	public static void trim(File mp4SrcFile, File mp4DstFile, long begin, long end, TimeUnit timeUnit) throws Exception {
-		trim(mp4SrcFile, mp4DstFile, begin, end, timeUnit, true, true);
-	}
-	
-	public static void trim(File mp4SrcFile, File mp4DstFile, long begin, long end, TimeUnit timeUnit, 
-			boolean includeAudio, boolean includeVideo) throws Exception 
-	{
-		// make sure destination file is mp4
-		if( !FileHelper.isExtension(mp4DstFile, MP4_EXTENSION) ) {
-			final String error = String.format("Destination file must have an extension of %s.", MP4_EXTENSION);
-			throw new IOException(error);
-		}
-		
+	public static void trim(File mp4SrcFile, File mp4DstFile, long startTime, long stopTime, TimeUnit timeUnit) throws Exception {
 		// remove destination file 
 		if(mp4DstFile.exists()) {
 			mp4DstFile.delete();
 		}
 		
-		// create new Trimmer
-		final Trimmer trimmer = new Trimmer(begin, end, timeUnit, includeAudio, includeVideo);
-		
-		// reader
-		final IMediaReader reader = ToolFactory.makeReader(mp4SrcFile.getPath());
-		reader.addListener(trimmer);
-		
-		// writer
-		final IMediaWriter writer = ToolFactory.makeWriter(mp4DstFile.getPath(), reader);
-		trimmer.addListener(writer);
-		 
-		// trim video
-		while (reader.readPacket() == null);
-	}
-	
-	static class Trimmer extends MediaToolAdapter {
-
-		final private long begin, end;
-		final private TimeUnit timeUnit;
-		final private boolean includeAudio, includeVideo;
-		
-		Trimmer(long begin, long end, TimeUnit timeUnit, boolean includeAudio, boolean includeVideo) {
-			this.begin = begin;
-			this.end = end;
-			this.timeUnit = timeUnit;
-			this.includeAudio = includeAudio;
-			this.includeVideo = includeVideo;
-		}
-		
-		boolean capture(IRawMediaEvent event) {
-			final long mark = timeUnit.convert(event.getTimeStamp(), event.getTimeUnit());
-			if(mark >= begin && mark < end) {
-				return true;
-			}
-			return false;
-		}
-		
-		@Override
-		public void onVideoPicture(IVideoPictureEvent event) {
-			if(includeVideo && capture(event)) {
-				super.onVideoPicture(event);
-			}
-		}
-		
-		@Override
-		public void onAudioSamples(IAudioSamplesEvent event) {
-			if(includeAudio && capture(event)) {
-				super.onAudioSamples(event);
+		try( final FrameGrabber grabber = new FFmpegFrameGrabber(mp4SrcFile) ) {
+			// setup start/stop microseconds
+			final long startMicros = timeUnit.toMicros(startTime);
+			final long stopMicros = timeUnit.toMicros(stopTime);
+			
+			// setup grabber
+			grabber.start();
+			grabber.setTimestamp(startMicros);
+			
+			// setup recorder
+			try( final FrameRecorder recorder = new FFmpegFrameRecorder(mp4DstFile, grabber.getAudioChannels()) ) {
+				recorder.setFrameRate( grabber.getFrameRate() );
+				recorder.setSampleRate( grabber.getSampleRate() );
+				recorder.setImageWidth( grabber.getImageWidth() );
+				recorder.setImageHeight( grabber.getImageHeight() );
+				recorder.start();
+						
+				// record
+				Frame frame;
+				while( (frame = grabber.grab()) != null && recorder.getTimestamp() < stopMicros) {
+				    recorder.record(frame);
+				}
+				
+				// stop
+				recorder.stop();
+				grabber.stop();
 			}
 		}
 	}
