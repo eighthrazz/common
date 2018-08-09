@@ -12,7 +12,6 @@ import com.razz.common.util.media.VideoUtils;
 
 public class VideoUtilsTest {
 
-	@Test
 	public void trimTest() throws Exception {
 		final File mp4SrcFile = Paths.get(System.getProperty("user.home"), "TEST", "src.mp4").toFile();
 		assertTrue(mp4SrcFile.exists());

@@ -8,8 +8,24 @@
 	<artifactId>common</artifactId>
 	<packaging>pom</packaging>
 	<version>1.0</version>
-    <name>common</name>
+    <name>reko-ranger</name>
 
+	<properties>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+	</properties>
+	
+	<distributionManagement>
+		<snapshotRepository>
+			<id>nexus-snapshots</id>
+			<url>http://192.168.1.127:8081/repository/maven-snapshots/</url>
+		</snapshotRepository>
+		<repository>
+			<id>nexus-releases</id>
+			<url>http://192.168.1.127:8081/repository/maven-releases/</url>
+		</repository>
+	</distributionManagement>
+	
 	<modules>
 		<module>common-utils</module>
 	</modules>
