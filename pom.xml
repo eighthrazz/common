@@ -8,7 +8,7 @@
 	<artifactId>common</artifactId>
 	<packaging>pom</packaging>
 	<version>1.0</version>
-    <name>reko-ranger</name>
+    <name>common</name>
 
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
