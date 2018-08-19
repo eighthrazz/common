@@ -20,10 +20,6 @@
 			<id>nexus-snapshots</id>
 			<url>http://docker.razz.com/nexus/repository/maven-snapshots/</url>
 		</snapshotRepository>
-		<repository>
-			<id>nexus-releases</id>
-			<url>http://docker.razz.com/nexus/repository/maven-releases/</url>
-		</repository>
 	</distributionManagement>
 	
 	<modules>
