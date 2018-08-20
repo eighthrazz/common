@@ -2,7 +2,9 @@ package com.razz.common.util.ftp;
 
 import java.io.Closeable;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.NotDirectoryException;
 import java.nio.file.Path;
@@ -155,6 +157,19 @@ public class Ftp implements Closeable {
 			getFTPClient().retrieveFile(remote, localFileOut);
 		}
 		return localFile;
+	}
+	
+	/**
+	 * store.
+	 * @param localFile
+	 * @param remoteFile
+	 * @throws Exception
+	 */
+	public void store(File localFile, File remoteFile) throws Exception {
+		final String remote = ftpPath( remoteFile.getPath() );
+		try(InputStream remoteFileIn = new FileInputStream(localFile)) {
+			getFTPClient().storeFile(remote, remoteFileIn);
+		}
 	}
 	
 	/**

@@ -3,26 +3,30 @@ package com.razz.common.mongo.model;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Property;
 
-@Entity("video")
-public class VideoDO extends BaseDO {
+import com.amazonaws.services.rekognition.model.FaceDetection;
+
+@Entity("face")
+public class FaceDO extends BaseDO {
 	
 	@Property("key")
 	private String key;
+	@Property("index")
+	private int index;
 	@Property("srcPath")
 	private String srcPath;
-	@Property("previewPath")
-	private String previewPath;
+	private FaceDetection faceDetection;
 	
-	public VideoDO() {
+	public FaceDO() {
 		setKey("");
-		setSrcPath("");
-		setPreviewPath("");
+		setIndex(0);
+		setFaceDetection(null);
 	}
 	
-	public VideoDO(String key, String srcPath) {
+	public FaceDO(String key, int index, FaceDetection faceDetection) {
 		this();
 		setKey(key);
-		setSrcPath(srcPath);
+		setIndex(index);
+		setFaceDetection(faceDetection);
 	}
 
 	public String getKey() {
@@ -33,6 +37,14 @@ public class VideoDO extends BaseDO {
 		this.key = key;
 	}
 
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
 	public String getSrcPath() {
 		return srcPath;
 	}
@@ -41,20 +53,21 @@ public class VideoDO extends BaseDO {
 		this.srcPath = srcPath;
 	}
 
-	public String getPreviewPath() {
-		return previewPath;
+	public FaceDetection getFaceDetection() {
+		return faceDetection;
 	}
 
-	public void setPreviewPath(String previewPath) {
-		this.previewPath = previewPath;
+	public void setFaceDetection(FaceDetection faceDetection) {
+		this.faceDetection = faceDetection;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((faceDetection == null) ? 0 : faceDetection.hashCode());
+		result = prime * result + index;
 		result = prime * result + ((key == null) ? 0 : key.hashCode());
-		result = prime * result + ((previewPath == null) ? 0 : previewPath.hashCode());
 		result = prime * result + ((srcPath == null) ? 0 : srcPath.hashCode());
 		return result;
 	}
@@ -67,16 +80,18 @@ public class VideoDO extends BaseDO {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		VideoDO other = (VideoDO) obj;
+		FaceDO other = (FaceDO) obj;
+		if (faceDetection == null) {
+			if (other.faceDetection != null)
+				return false;
+		} else if (!faceDetection.equals(other.faceDetection))
+			return false;
+		if (index != other.index)
+			return false;
 		if (key == null) {
 			if (other.key != null)
 				return false;
 		} else if (!key.equals(other.key))
-			return false;
-		if (previewPath == null) {
-			if (other.previewPath != null)
-				return false;
-		} else if (!previewPath.equals(other.previewPath))
 			return false;
 		if (srcPath == null) {
 			if (other.srcPath != null)
@@ -88,7 +103,8 @@ public class VideoDO extends BaseDO {
 
 	@Override
 	public String toString() {
-		return "VideoDO [key=" + key + ", srcPath=" + srcPath + ", previewPath=" + previewPath + "]";
+		return "FaceDO [key=" + key + ", index=" + index + ", srcPath=" + srcPath + ", faceDetection=" + faceDetection
+				+ "]";
 	}
 
 }
