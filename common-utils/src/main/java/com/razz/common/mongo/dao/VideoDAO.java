@@ -20,9 +20,11 @@ public class VideoDAO extends BaseDAO<VideoDO> {
 
 	@Override
 	public void update(VideoDO video) {
+		// NOTE: any updates to the DO will have to be included here
 		final UpdateOperations<VideoDO> updateOperation = 
 				datastore.createUpdateOperations(VideoDO.class)
-				.set("active", video.isActive());
+				.set("active", video.isActive())
+				.set("faces", video.getFaceList()); //TODO
 		datastore.update(getKeyQuery(video), updateOperation);
 	}
 	

@@ -10,7 +10,8 @@ public enum AwsConfigKey {
 	COLLECTION("aws.collection"),
 	BUCKET("aws.bucket"),
 	PROFILE_NAME("aws.profileName"),
-	END_POINT("aws.endPoint");
+	END_POINT("aws.endPoint"),
+	BUCKET_EXPIRATION_MINUTES("aws.bucket.expirationMinutes");
 	
 	private final String key;
 

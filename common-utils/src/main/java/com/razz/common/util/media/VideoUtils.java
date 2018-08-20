@@ -66,6 +66,7 @@ public class VideoUtils {
 				recorder.setSampleRate( grabber.getSampleRate() );
 				recorder.setImageWidth( grabber.getImageWidth() );
 				recorder.setImageHeight( grabber.getImageHeight() );
+				recorder.setVideoQuality(0); // important
 				recorder.start();
 						
 				// record
